@@ -142,7 +142,11 @@ def test_ac02_saldo_insuficiente():
         "dias_solicitados": 15,
         "motivo": "Vacaciones largas"
     }
-    response = client.post("/api/v1/vacaciones/solicitar", json=solicitud_payload)
+    response = client.post(
+    "/api/v1/vacaciones/solicitar",
+    json=solicitud_payload,
+    headers={"X-User-Id": str(empleado_id)}
+)
     assert response.status_code == 400
     assert response.json()["detail"] == "Insufficient vacation balance"
 
@@ -213,7 +217,11 @@ def test_ac03_manager_no_autorizado():
         "dias_solicitados": 3,
         "motivo": "Vacaciones"
     }
-    response = client.post("/api/v1/vacaciones/solicitar", json=solicitud_payload)
+    response = client.post(
+        "/api/v1/vacaciones/solicitar",
+        json=solicitud_payload,
+        headers={"X-User-Id": str(empleado_id)}
+    )
     assert response.status_code == 201
     solicitud_id = response.json()["id"]
     assert solicitud_id == 1
